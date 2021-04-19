@@ -16,7 +16,7 @@ exports.handler = async function getPlanDetails(req, res, next) {
   };
   const response = await contractService.getPlanDetails(req, params);
   let output = "";
-  if (response.ok == false) {
+  if (response.ok == false && response.error.status == 400) {
     output = {
       code: response.error.status,
       status: response.error.name,
@@ -26,7 +26,19 @@ exports.handler = async function getPlanDetails(req, res, next) {
     res.status(output.code);
     res.json(output);
     return next(response.error);
-  } else {
+  } 
+  else if (response.ok == false){
+    output = {
+      code: response.error.response.status,
+      status: response.error.response.statusText,
+      message: response.error.response.data.result.exceptionMessage,
+    }
+    getPlanDetailError.inc();
+    res.status(output.code);
+    res.json(output);
+    return next(response.error);
+  }
+  else {
     const planList = {
       agreementItem: [
         {
