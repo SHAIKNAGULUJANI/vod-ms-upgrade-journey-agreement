@@ -70,22 +70,27 @@ const expected = {
     ],
   },
 };
-
 const failure = {
   mock: {
     ok: false,
     error: {
       response: {
-        status : 400,
+        status : 403,
         name : "CustomErrorr",
+        data : {
+          result : {
+            exceptionMessage : "AccessDenied"
+          }
+        },
+        statusText : "Forbidden"
       },
     },
   },
   expected: {
     result: {
-      code: 404,
-      status: "CustomError",
-      message: "Invalid Msisdn",
+      code: 403,
+      status: "Forbidden",
+      message: "AccessDenied",
     },
   },
 };
